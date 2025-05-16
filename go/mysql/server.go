@@ -387,7 +387,7 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		// Both server and client want to use MysqlNativePassword:
 		// the negotiation can be completed right away, using the
 		// ValidateHash() method.
-		userData, err := l.authServer.ValidateHash(salt, user, authResponse, conn.RemoteAddr())
+		userData, err := l.authServer.ValidateHash(salt, user, authResponse, conn.LocalAddr())
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
@@ -419,7 +419,7 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		}
 		c.recycleReadPacket()
 
-		userData, err := l.authServer.ValidateHash(salt, user, response, conn.RemoteAddr())
+		userData, err := l.authServer.ValidateHash(salt, user, response, conn.LocalAddr())
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
