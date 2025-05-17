@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"testing"
 
-	binlogdatapb "github.com/dolthub/vitess/go/vt/proto/binlogdata"
+	binlogdatapb "github.com/yuxuan2025/vitess/go/vt/proto/binlogdata"
 )
 
 func TestQueryString(t *testing.T) {

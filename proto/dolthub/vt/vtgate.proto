@@ -17,7 +17,7 @@ limitations under the License.
 // Data definitions for service vtgateservice.
 
 syntax = "proto3";
-option go_package = "github.com/dolthub/vitess/go/vt/proto/vtgate";
+option go_package = "github.com/yuxuan2025/vitess/go/vt/proto/vtgate";
 
 package dolthub.vt.vtgate;
 

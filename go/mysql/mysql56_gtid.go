@@ -22,8 +22,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 const mysql56FlavorID = "MySQL56"

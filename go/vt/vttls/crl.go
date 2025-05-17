@@ -24,7 +24,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/dolthub/vitess/go/vt/log"
+	"github.com/yuxuan2025/vitess/go/vt/log"
 )
 
 type verifyPeerCertificateFunc func([][]byte, [][]*x509.Certificate) error

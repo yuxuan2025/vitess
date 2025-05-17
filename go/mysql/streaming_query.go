@@ -17,9 +17,9 @@ limitations under the License.
 package mysql
 
 import (
-	"github.com/dolthub/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 // This file contains the methods needed to execute streaming queries.

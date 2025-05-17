@@ -26,7 +26,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/dolthub/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
 )
 
 func TestAppend(t *testing.T) {

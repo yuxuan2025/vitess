@@ -23,8 +23,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 // SslMode indicates the type of SSL mode to use. This matches

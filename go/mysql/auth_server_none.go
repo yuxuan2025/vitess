@@ -19,7 +19,7 @@ package mysql
 import (
 	"net"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 // AuthServerNone takes all comers.

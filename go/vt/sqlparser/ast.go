@@ -28,11 +28,11 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/dolthub/vitess/go/sqltypes"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
-	vtrpcpb "github.com/dolthub/vitess/go/vt/proto/vtrpc"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
+	vtrpcpb "github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
 )
 
 // parserPool is a pool for parser objects.
@@ -3001,7 +3001,7 @@ type JSONTableColOpts struct {
 func (opt JSONTableColOpts) Format(buf *TrackedBuffer) {
 	buf.Myprintf("\"%s\"", opt.Path)
 	if opt.ValOnEmpty != nil {
-        buf.Myprintf(" %v %s %s", opt.ValOnEmpty, keywordStrings[ON], keywordStrings[EMPTY])
+		buf.Myprintf(" %v %s %s", opt.ValOnEmpty, keywordStrings[ON], keywordStrings[EMPTY])
 	}
 	if opt.ValOnError != nil {
 		buf.Myprintf(" %v %s %s ", opt.ValOnError, keywordStrings[ON], keywordStrings[ERROR])
@@ -7037,8 +7037,8 @@ func (node *Deallocate) Format(buf *TrackedBuffer) {
 }
 
 type CreateSpatialRefSys struct {
-	SRID 	    *SQLVal
-	OrReplace	bool
+	SRID        *SQLVal
+	OrReplace   bool
 	IfNotExists bool
 	SrsAttr     *SrsAttribute
 }
@@ -7066,7 +7066,7 @@ type SrsAttribute struct {
 	Name         string
 	Definition   string
 	Organization string
-	OrgID	     *SQLVal
+	OrgID        *SQLVal
 	Description  string
 }
 

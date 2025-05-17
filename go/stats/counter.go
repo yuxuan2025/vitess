@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/dolthub/vitess/go/sync2"
+	"github.com/yuxuan2025/vitess/go/sync2"
 )
 
 // Counter tracks a cumulative count of a metric.

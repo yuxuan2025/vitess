@@ -25,8 +25,8 @@
 package query
 
 import (
-	topodata "github.com/dolthub/vitess/go/vt/proto/topodata"
-	vtrpc "github.com/dolthub/vitess/go/vt/proto/vtrpc"
+	topodata "github.com/yuxuan2025/vitess/go/vt/proto/topodata"
+	vtrpc "github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

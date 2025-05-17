@@ -21,9 +21,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/dolthub/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 // ParsedQuery represents a parsed query where

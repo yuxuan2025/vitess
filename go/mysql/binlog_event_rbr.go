@@ -24,11 +24,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dolthub/vitess/go/sqltypes"
-	"github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 // ZeroTimestamp is the special value 0 for a timestamp.
@@ -37,19 +37,20 @@ var ZeroTimestamp = []byte("0000-00-00 00:00:00")
 // TableMap implements BinlogEvent.TableMap().
 //
 // Expected format (L = total length of event data):
-//  # bytes   field
-//  4/6       table id
-//  2         flags
-//  1         schema name length sl
-//  sl        schema name
-//  1         [00]
-//  1         table name length tl
-//  tl        table name
-//  1         [00]
-//  <var>     column count cc (var-len encoded)
-//  cc        column-def, one byte per column
-//  <var>     column-meta-def (var-len encoded string)
-//  n         NULL-bitmask, length: (cc + 7) / 8
+//
+//	# bytes   field
+//	4/6       table id
+//	2         flags
+//	1         schema name length sl
+//	sl        schema name
+//	1         [00]
+//	1         table name length tl
+//	tl        table name
+//	1         [00]
+//	<var>     column count cc (var-len encoded)
+//	cc        column-def, one byte per column
+//	<var>     column-meta-def (var-len encoded string)
+//	n         NULL-bitmask, length: (cc + 7) / 8
 func (ev binlogEvent) TableMap(f BinlogFormat) (*TableMap, error) {
 	data := ev.Bytes()[f.HeaderLength:]
 
@@ -908,13 +909,15 @@ func CellValue(data []byte, pos int, typ byte, metadata uint16, styp querypb.Typ
 // Rows implements BinlogEvent.TableMap().
 //
 // Expected format (L = total length of event data):
-//  # bytes   field
-//  4/6       table id
-//  2         flags
-//  -- if version == 2
-//  2         extra data length edl
-//  edl       extra data
-//  -- endif
+//
+//	# bytes   field
+//	4/6       table id
+//	2         flags
+//	-- if version == 2
+//	2         extra data length edl
+//	edl       extra data
+//	-- endif
+//
 // <var>      number of columns (var-len encoded)
 // <var>      identify bitmap
 // <var>      data bitmap

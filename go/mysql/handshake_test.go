@@ -27,8 +27,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/dolthub/vitess/go/vt/tlstest"
-	"github.com/dolthub/vitess/go/vt/vttls"
+	"github.com/yuxuan2025/vitess/go/vt/tlstest"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 )
 
 // This file tests the handshake scenarios between our client and our server.

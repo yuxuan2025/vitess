@@ -30,14 +30,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dolthub/vitess/go/bucketpool"
-	"github.com/dolthub/vitess/go/sqltypes"
-	"github.com/dolthub/vitess/go/sync2"
-	"github.com/dolthub/vitess/go/vt/log"
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
-	"github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/sqlparser"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/bucketpool"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sync2"
+	"github.com/yuxuan2025/vitess/go/vt/log"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
+	"github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/sqlparser"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 const (
@@ -1291,7 +1291,6 @@ func (c *Conn) handleNextCommand(handler Handler) error {
 			}
 			return c.flush()
 		}
-
 
 		// There is always a pending result set, because we prefetch it to detect EOF.
 		// When we detect EOF, we set c.cs = nil.

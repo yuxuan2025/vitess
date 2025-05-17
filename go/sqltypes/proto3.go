@@ -19,10 +19,10 @@ package sqltypes
 import (
 	"google.golang.org/protobuf/proto"
 
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
-	vtgatepb "github.com/dolthub/vitess/go/vt/proto/vtgate"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
+	vtgatepb "github.com/yuxuan2025/vitess/go/vt/proto/vtgate"
 )
 
 // This file contains the proto3 conversion functions for the structures

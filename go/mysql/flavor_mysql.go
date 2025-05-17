@@ -22,8 +22,8 @@ import (
 	"io"
 	"time"
 
-	"github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 // mysqlFlavor implements the Flavor interface for Mysql.

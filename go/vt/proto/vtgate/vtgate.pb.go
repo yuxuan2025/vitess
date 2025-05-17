@@ -24,10 +24,10 @@
 package vtgate
 
 import (
-	binlogdata "github.com/dolthub/vitess/go/vt/proto/binlogdata"
-	query "github.com/dolthub/vitess/go/vt/proto/query"
-	topodata "github.com/dolthub/vitess/go/vt/proto/topodata"
-	vtrpc "github.com/dolthub/vitess/go/vt/proto/vtrpc"
+	binlogdata "github.com/yuxuan2025/vitess/go/vt/proto/binlogdata"
+	query "github.com/yuxuan2025/vitess/go/vt/proto/query"
+	topodata "github.com/yuxuan2025/vitess/go/vt/proto/topodata"
+	vtrpc "github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

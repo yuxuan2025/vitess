@@ -24,9 +24,9 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/dolthub/vitess/go/bytes2"
-	"github.com/dolthub/vitess/go/sqltypes"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/bytes2"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 const (
@@ -47,7 +47,7 @@ type Tokenizer struct {
 	Position             int
 	OldPosition          int
 	lastToken            []byte
-	lastTyp  int
+	lastTyp              int
 	lastNonNilToken      []byte
 	LastError            error
 	posVarIndex          int
@@ -86,8 +86,8 @@ type Tokenizer struct {
 func NewStringTokenizer(sql string) *Tokenizer {
 	buf := []byte(sql)
 	return &Tokenizer{
-		buf:     buf,
-		bufSize: len(buf),
+		buf:                 buf,
+		bufSize:             len(buf),
 		identifierQuotes:    map[uint16]struct{}{backtickQuote: {}},
 		stringLiteralQuotes: map[uint16]struct{}{doubleQuote: {}, singleQuote: {}},
 	}
@@ -110,8 +110,8 @@ func NewStringTokenizerForAnsiQuotes(sql string) *Tokenizer {
 // default parser options.
 func NewTokenizer(r io.Reader) *Tokenizer {
 	return &Tokenizer{
-		InStream: r,
-		buf:      make([]byte, defaultBufSize),
+		InStream:            r,
+		buf:                 make([]byte, defaultBufSize),
 		identifierQuotes:    map[uint16]struct{}{backtickQuote: {}},
 		stringLiteralQuotes: map[uint16]struct{}{doubleQuote: {}, singleQuote: {}},
 	}
@@ -1265,7 +1265,7 @@ func (tkn *Tokenizer) scanString(delim uint16, typ int) (int, []byte) {
 	if tkn.lastChar == '@' {
 		tkn.potentialAccountName = true
 	}
-	
+
 	// mysql strings get auto concatenated, so see if the next token is a string and scan it if so
 	tkn.skipBlank()
 	if contains(tkn.stringLiteralQuotes, tkn.lastChar) == tkn.lastChar {
@@ -1278,7 +1278,7 @@ func (tkn *Tokenizer) scanString(delim uint16, typ int) (int, []byte) {
 			return LEX_ERROR, buffer.Bytes()
 		}
 	}
-	
+
 	return typ, buffer.Bytes()
 }
 

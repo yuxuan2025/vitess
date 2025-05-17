@@ -19,9 +19,9 @@ package mysql
 import (
 	"fmt"
 
-	"github.com/dolthub/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 // This file provides a few utility variables and methods, mostly for tests.
@@ -108,17 +108,20 @@ var DescribeTableFields = []*querypb.Field{
 // DescribeTableRow returns a row for a 'describe table' command.
 // 'name' is the name of the field.
 // 'type' is the type of the field. Something like:
-//   'int(11)' for 'int'
-//   'int(10) unsigned' for 'int unsigned'
-//   'bigint(20)' for 'bigint'
-//   'bigint(20) unsigned' for 'bigint unsigned'
-//   'varchar(128)'
+//
+//	'int(11)' for 'int'
+//	'int(10) unsigned' for 'int unsigned'
+//	'bigint(20)' for 'bigint'
+//	'bigint(20) unsigned' for 'bigint unsigned'
+//	'varchar(128)'
+//
 // 'null' is true if the field can be NULL.
 // 'key' is either:
-//    - 'PRI' if part of the primary key. If not:
-//    - 'UNI' if part of a unique index. If not:
-//    - 'MUL' if part of a non-unique index. If not:
-//    - empty if part of no key / index.
+//   - 'PRI' if part of the primary key. If not:
+//   - 'UNI' if part of a unique index. If not:
+//   - 'MUL' if part of a non-unique index. If not:
+//   - empty if part of no key / index.
+//
 // 'def' is the default value for the field. Empty if NULL default.
 func DescribeTableRow(name string, typ string, null bool, key string, def string) []sqltypes.Value {
 	nullStr := "NO"

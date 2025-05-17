@@ -26,8 +26,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dolthub/vitess/go/vt/tlstest"
-	"github.com/dolthub/vitess/go/vt/vttls"
+	"github.com/yuxuan2025/vitess/go/vt/tlstest"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 )
 
 const clientCertUsername = "Client Cert"
@@ -144,7 +144,6 @@ func TestNoCert(t *testing.T) {
 	tlstest.CreateCA(root)
 	tlstest.CreateSignedCert(root, tlstest.CA, "01", "server", "server.example.com")
 	tlstest.CreateCRL(root, tlstest.CA)
-
 
 	// Create the server with TLS config.
 	serverConfig, err := vttls.ServerConfig(

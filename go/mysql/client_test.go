@@ -30,10 +30,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dolthub/vitess/go/vt/tlstest"
-	"github.com/dolthub/vitess/go/vt/vttls"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/yuxuan2025/vitess/go/vt/tlstest"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 )
 
 // assertSQLError makes sure we get the right error.

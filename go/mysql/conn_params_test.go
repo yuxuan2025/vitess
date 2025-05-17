@@ -19,7 +19,7 @@ package mysql
 import (
 	"testing"
 
-	"github.com/dolthub/vitess/go/vt/vttls"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 
 	"github.com/stretchr/testify/assert"
 )

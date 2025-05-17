@@ -17,8 +17,8 @@ limitations under the License.
 package mysql
 
 import (
-	replicationdatapb "github.com/dolthub/vitess/go/vt/proto/replicationdata"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	replicationdatapb "github.com/yuxuan2025/vitess/go/vt/proto/replicationdata"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 // SlaveStatus holds replication information from SHOW SLAVE STATUS.

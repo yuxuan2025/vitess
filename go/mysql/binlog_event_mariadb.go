@@ -19,8 +19,8 @@ package mysql
 import (
 	"encoding/binary"
 
-	"github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
 // mariadbBinlogEvent wraps a raw packet buffer and provides methods to examine
@@ -43,10 +43,11 @@ func (ev mariadbBinlogEvent) IsGTID() bool {
 // GTID implements BinlogEvent.GTID().
 //
 // Expected format:
-//   # bytes   field
-//   8         sequence number
-//   4         domain ID
-//   1         flags2
+//
+//	# bytes   field
+//	8         sequence number
+//	4         domain ID
+//	1         flags2
 func (ev mariadbBinlogEvent) GTID(f BinlogFormat) (GTID, bool, error) {
 	const FLStandalone = 1
 

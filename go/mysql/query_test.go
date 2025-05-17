@@ -25,9 +25,9 @@ import (
 
 	"google.golang.org/protobuf/proto"
 
-	"github.com/dolthub/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 // Utility function to write sql query as packets to test parseComPrepare
@@ -699,11 +699,11 @@ func writeRawPacketToConn(c *Conn, packet []byte) error {
 }
 
 type testExec struct {
-	query string
-	useCursor byte
+	query             string
+	useCursor         byte
 	expectedNumFields int
-	expectedNumRows int
-	maxRows int
+	expectedNumRows   int
+	maxRows           int
 }
 
 func clientExecute(t *testing.T, cConn *Conn, useCursor byte, maxRows int) (*sqltypes.Result, serverStatus) {
@@ -827,52 +827,52 @@ func TestExecuteQueries(t *testing.T) {
 
 	tests := []testExec{
 		{
-			query: "empty result",
-			useCursor: 0,
+			query:             "empty result",
+			useCursor:         0,
 			expectedNumFields: 3,
-			expectedNumRows: 0,
-			maxRows: 100,
+			expectedNumRows:   0,
+			maxRows:           100,
 		},
 		{
-			query: "select rows",
-			useCursor: 0,
+			query:             "select rows",
+			useCursor:         0,
 			expectedNumFields: 2,
-			expectedNumRows: 2,
-			maxRows: 100,
+			expectedNumRows:   2,
+			maxRows:           100,
 		},
 		{
-			query: "large batch",
-			useCursor: 0,
+			query:             "large batch",
+			useCursor:         0,
 			expectedNumFields: 2,
-			expectedNumRows: 256,
-			maxRows: 1000,
+			expectedNumRows:   256,
+			maxRows:           1000,
 		},
 		{
-			query: "empty result",
-			useCursor: 1,
+			query:             "empty result",
+			useCursor:         1,
 			expectedNumFields: 3,
-			expectedNumRows: 0,
-			maxRows: 100,
+			expectedNumRows:   0,
+			maxRows:           100,
 		},
 		{
-			query: "select rows",
-			useCursor: 1,
+			query:             "select rows",
+			useCursor:         1,
 			expectedNumFields: 2,
-			expectedNumRows: 2,
-			maxRows: 100,
+			expectedNumRows:   2,
+			maxRows:           100,
 		},
 		{
-			query: "large batch",
-			useCursor: 1,
+			query:             "large batch",
+			useCursor:         1,
 			expectedNumFields: 2,
-			expectedNumRows: 256,
-			maxRows: 1000,
+			expectedNumRows:   256,
+			maxRows:           1000,
 		},
 	}
 
 	t.Run("WithoutDeprecateEOF", func(t *testing.T) {
 		for _, test := range tests {
-			t.Run(test.query, func (t *testing.T) {
+			t.Run(test.query, func(t *testing.T) {
 				checkExecute(t, sConn, cConn, test)
 			})
 		}
@@ -882,7 +882,7 @@ func TestExecuteQueries(t *testing.T) {
 	cConn.Capabilities = CapabilityClientDeprecateEOF
 	t.Run("WithDeprecateEOF", func(t *testing.T) {
 		for _, test := range tests {
-			t.Run(test.query, func (t *testing.T) {
+			t.Run(test.query, func(t *testing.T) {
 				checkExecute(t, sConn, cConn, test)
 			})
 		}

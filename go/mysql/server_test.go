@@ -30,15 +30,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dolthub/vitess/go/sqltypes"
-	vtenv "github.com/dolthub/vitess/go/vt/env"
-	"github.com/dolthub/vitess/go/vt/sqlparser"
-	"github.com/dolthub/vitess/go/vt/tlstest"
-	"github.com/dolthub/vitess/go/vt/vterrors"
-	"github.com/dolthub/vitess/go/vt/vttls"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
+	vtenv "github.com/yuxuan2025/vitess/go/vt/env"
+	"github.com/yuxuan2025/vitess/go/vt/sqlparser"
+	"github.com/yuxuan2025/vitess/go/vt/tlstest"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
-	vtrpcpb "github.com/dolthub/vitess/go/vt/proto/vtrpc"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
+	vtrpcpb "github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
 )
 
 var selectRowsResult = &sqltypes.Result{
@@ -241,7 +241,7 @@ func (th *testHandler) ComStmtExecute(c *Conn, prepare *PrepareData, callback fu
 					Type: querypb.Type_VARCHAR,
 				},
 			},
-			Rows: [][]sqltypes.Value{},
+			Rows:         [][]sqltypes.Value{},
 			RowsAffected: 0,
 		}
 		return callback(res)
@@ -290,7 +290,7 @@ func (th *testHandler) ComStmtExecute(c *Conn, prepare *PrepareData, callback fu
 					Type: querypb.Type_VARCHAR,
 				},
 			},
-			Rows: rows,
+			Rows:         rows,
 			RowsAffected: uint64(n),
 		}
 		return callback(res)

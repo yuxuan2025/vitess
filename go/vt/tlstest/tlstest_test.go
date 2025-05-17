@@ -30,7 +30,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/dolthub/vitess/go/vt/vttls"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 )
 
 func TestClientServerWithoutCombineCerts(t *testing.T) {

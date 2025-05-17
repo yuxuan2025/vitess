@@ -1,4 +1,4 @@
-module github.com/dolthub/vitess
+module github.com/yuxuan2025/vitess
 
 go 1.19
 

@@ -20,9 +20,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/dolthub/vitess/go/sqltypes"
+	"github.com/yuxuan2025/vitess/go/sqltypes"
 
-	querypb "github.com/dolthub/vitess/go/vt/proto/query"
+	querypb "github.com/yuxuan2025/vitess/go/vt/proto/query"
 )
 
 func TestNewParsedQuery(t *testing.T) {

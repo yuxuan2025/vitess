@@ -17,7 +17,7 @@ limitations under the License.
 package mysql
 
 import (
-	"github.com/dolthub/vitess/go/vt/vttls"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 )
 
 // ConnParams contains all the parameters to use to connect to mysql.

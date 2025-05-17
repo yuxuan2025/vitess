@@ -28,9 +28,9 @@ import (
 	"strings"
 	"time"
 
-	vtrpcpb "github.com/dolthub/vitess/go/vt/proto/vtrpc"
-	"github.com/dolthub/vitess/go/vt/vterrors"
-	"github.com/dolthub/vitess/go/vt/vttls"
+	vtrpcpb "github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
+	"github.com/yuxuan2025/vitess/go/vt/vterrors"
+	"github.com/yuxuan2025/vitess/go/vt/vttls"
 )
 
 // connectResult is used by Connect.

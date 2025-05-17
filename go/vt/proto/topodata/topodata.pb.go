@@ -27,7 +27,7 @@
 package topodata
 
 import (
-	vttime "github.com/dolthub/vitess/go/vt/proto/vttime"
+	vttime "github.com/yuxuan2025/vitess/go/vt/proto/vttime"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

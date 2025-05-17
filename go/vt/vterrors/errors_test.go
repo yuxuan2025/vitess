@@ -25,7 +25,7 @@ import (
 	"strings"
 	"testing"
 
-	vtrpcpb "github.com/dolthub/vitess/go/vt/proto/vtrpc"
+	vtrpcpb "github.com/yuxuan2025/vitess/go/vt/proto/vtrpc"
 )
 
 func TestWrapNil(t *testing.T) {

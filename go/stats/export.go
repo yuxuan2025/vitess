@@ -35,7 +35,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/dolthub/vitess/go/vt/log"
+	"github.com/yuxuan2025/vitess/go/vt/log"
 )
 
 var emitStats = false
