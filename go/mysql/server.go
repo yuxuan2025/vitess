@@ -18,6 +18,7 @@ package mysql
 
 import (
 	"crypto/tls"
+	"errors"
 	"io"
 	"net"
 	"strings"
@@ -131,6 +132,10 @@ type Handler interface {
 	ParserOptionsForConnection(c *Conn) (sqlparser.ParserOptions, error)
 }
 
+type MetricsEmitter interface {
+	EmitMySQLTCPConnectionRejected()
+}
+
 // Listener is the MySQL server protocol listener.
 type Listener struct {
 	// Construction parameters, set by NewListener.
@@ -186,6 +191,9 @@ type Listener struct {
 
 	// RequireSecureTransport configures the server to reject connections from insecure clients
 	RequireSecureTransport bool
+
+	// MetricsEmitter emits metrics for connection failures (bytehouse only)
+	metrics MetricsEmitter
 }
 
 // NewFromListener creates a new mysql listener from an existing net.Listener
@@ -219,6 +227,7 @@ type ListenerConfig struct {
 	Listener                 net.Listener
 	AuthServer               AuthServer
 	Handler                  Handler
+	Metrics                  MetricsEmitter
 	ConnReadTimeout          time.Duration
 	ConnWriteTimeout         time.Duration
 	ConnReadBufferSize       int
@@ -244,6 +253,7 @@ func NewListenerWithConfig(cfg ListenerConfig) (*Listener, error) {
 		authServer:               cfg.AuthServer,
 		handler:                  cfg.Handler,
 		listener:                 l,
+		metrics:                  cfg.Metrics,
 		ServerVersion:            DefaultServerVersion,
 		connectionID:             1,
 		connReadTimeout:          cfg.ConnReadTimeout,
@@ -264,7 +274,12 @@ func (l *Listener) Accept() {
 	for {
 		conn, err := l.listener.Accept()
 		if err != nil {
-			// Close() was probably called.
+			if !errors.Is(err, io.EOF) && !errors.Is(err, net.ErrClosed) {
+				log.Errorf("got unexpected error when trying to accept connection: %v", err)
+				if l.metrics != nil {
+					l.metrics.EmitMySQLTCPConnectionRejected()
+				}
+			}
 			return
 		}
 
@@ -320,6 +335,9 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 	if err != nil {
 		if err != io.EOF {
 			log.Errorf("Cannot send HandshakeV10 packet to %s: %v", c, err)
+			if l.metrics != nil {
+				l.metrics.EmitMySQLTCPConnectionRejected()
+			}
 		}
 		return
 	}
@@ -331,12 +349,18 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		// Don't log EOF errors. They cause too much spam, same as main read loop.
 		if err != io.EOF {
 			log.Infof("Cannot read client handshake response from %s: %v, it may not be a valid MySQL client", c, err)
+			if l.metrics != nil {
+				l.metrics.EmitMySQLTCPConnectionRejected()
+			}
 		}
 		return
 	}
 	user, authMethod, authResponse, err := l.parseClientHandshakePacket(c, true, response)
 	if err != nil {
 		log.Errorf("Cannot parse client handshake response from %s: %v", c, err)
+		if l.metrics != nil {
+			l.metrics.EmitMySQLTCPConnectionRejected()
+		}
 		return
 	}
 
@@ -347,6 +371,9 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		response, err = c.readEphemeralPacket()
 		if err != nil {
 			log.Errorf("Cannot read post-SSL client handshake response from %s: %v", c, err)
+			if l.metrics != nil {
+				l.metrics.EmitMySQLTCPConnectionRejected()
+			}
 			return
 		}
 
@@ -354,6 +381,9 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		user, authMethod, authResponse, err = l.parseClientHandshakePacket(c, false, response)
 		if err != nil {
 			log.Errorf("Cannot parse post-SSL client handshake response from %s: %v", c, err)
+			if l.metrics != nil {
+				l.metrics.EmitMySQLTCPConnectionRejected()
+			}
 			return
 		}
 		c.recycleReadPacket()
