@@ -418,22 +418,7 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		// Both server and client want to use MysqlNativePassword:
 		// the negotiation can be completed right away, using the
 		// ValidateHash() method.
-
-		// if proxy protocol header exists, use lb addr to validate, otherwise use empty
-		var plbAddr net.Addr = &net.IPAddr{IP: []byte{}}
-		// the connection might be TLS or non-TLS, we need to check in both cases if proxy protocol header exists
-		tlsConn, ok := c.Conn.(*tls.Conn)
-		if ok {
-			pConn, ok := tlsConn.NetConn().(*proxyproto.Conn)
-			if ok && pConn.ProxyHeader() != nil {
-				plbAddr = pConn.LocalAddr()
-			}
-		}
-		pConn, ok := c.Conn.(*proxyproto.Conn)
-		if ok && pConn.ProxyHeader() != nil {
-			plbAddr = pConn.LocalAddr()
-		}
-		userData, err := l.authServer.ValidateHash(salt, user, authResponse, plbAddr)
+		userData, err := l.authServer.ValidateHash(salt, user, authResponse, getPlbAddr(c))
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
@@ -465,7 +450,7 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		}
 		c.recycleReadPacket()
 
-		userData, err := l.authServer.ValidateHash(salt, user, response, conn.LocalAddr())
+		userData, err := l.authServer.ValidateHash(salt, user, response, getPlbAddr(c))
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
@@ -875,4 +860,22 @@ func tlsVersionToString(version uint16) string {
 	default:
 		return versionTLSUnknown
 	}
+}
+
+func getPlbAddr(c *Conn) net.Addr {
+	// if proxy protocol header exists, use lb addr to validate, otherwise use empty
+	var plbAddr net.Addr = &net.IPAddr{IP: []byte{}}
+	// the connection might be TLS or non-TLS, we need to check in both cases if proxy protocol header exists
+	tlsConn, ok := c.Conn.(*tls.Conn)
+	if ok {
+		pConn, ok := tlsConn.NetConn().(*proxyproto.Conn)
+		if ok && pConn.ProxyHeader() != nil {
+			plbAddr = pConn.LocalAddr()
+		}
+	}
+	pConn, ok := c.Conn.(*proxyproto.Conn)
+	if ok && pConn.ProxyHeader() != nil {
+		plbAddr = pConn.LocalAddr()
+	}
+	return plbAddr
 }
