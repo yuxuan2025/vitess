@@ -3,6 +3,7 @@ module github.com/yuxuan2025/vitess
 go 1.19
 
 require (
+	github.com/pires/go-proxyproto v0.8.0
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/tools v0.1.9
 	google.golang.org/grpc v1.24.0

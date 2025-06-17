@@ -24,6 +24,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pires/go-proxyproto"
 	"github.com/yuxuan2025/vitess/go/netutil"
 	"github.com/yuxuan2025/vitess/go/sqltypes"
 	"github.com/yuxuan2025/vitess/go/stats"
@@ -417,7 +418,22 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		// Both server and client want to use MysqlNativePassword:
 		// the negotiation can be completed right away, using the
 		// ValidateHash() method.
-		userData, err := l.authServer.ValidateHash(salt, user, authResponse, conn.LocalAddr())
+
+		// if proxy protocol header exists, use lb addr to validate, otherwise use empty
+		var plbAddr net.Addr = &net.IPAddr{IP: []byte{}}
+		// the connection might be TLS or non-TLS, we need to check in both cases if proxy protocol header exists
+		tlsConn, ok := c.Conn.(*tls.Conn)
+		if ok {
+			pConn, ok := tlsConn.NetConn().(*proxyproto.Conn)
+			if ok && pConn.ProxyHeader() != nil {
+				plbAddr = pConn.LocalAddr()
+			}
+		}
+		pConn, ok := c.Conn.(*proxyproto.Conn)
+		if ok && pConn.ProxyHeader() != nil {
+			plbAddr = pConn.LocalAddr()
+		}
+		userData, err := l.authServer.ValidateHash(salt, user, authResponse, plbAddr)
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
