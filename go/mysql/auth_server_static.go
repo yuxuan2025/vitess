@@ -205,7 +205,7 @@ func (a *AuthServerStatic) Salt() ([]byte, error) {
 }
 
 // ValidateHash is part of the AuthServer interface.
-func (a *AuthServerStatic) ValidateHash(salt []byte, user string, authResponse []byte, remoteAddr net.Addr) (Getter, error) {
+func (a *AuthServerStatic) ValidateHash(salt []byte, user string, authResponse []byte, remoteAddr net.Addr, vni uint32) (Getter, error) {
 	a.mu.Lock()
 	entries, ok := a.entries[user]
 	a.mu.Unlock()

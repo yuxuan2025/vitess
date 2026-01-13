@@ -18,6 +18,7 @@ package mysql
 
 import (
 	"crypto/tls"
+	"encoding/binary"
 	"errors"
 	"io"
 	"net"
@@ -70,6 +71,25 @@ var (
 		return connCount.Get() - totalUsers
 	})
 )
+
+const (
+	PP2_TYPE_VOLC_ENGINE                    proxyproto.PP2Type = 0xeb
+	PP2_SUBTYPE_VOLC_ENGINE_VPC_ID          SubTLVType         = 0x01
+	PP2_SUBTYPE_VOLC_ENGINE_VPC_ENDPOINT_ID SubTLVType         = 0x02
+)
+
+var (
+	ErrTLVInvalid     = errors.New("volc engine tlv is invalid")
+	ErrTLVUnsupported = errors.New("volc engine tly has unsupported subtype")
+	ErrTLVNotFound    = errors.New("volc engine tlv is not found")
+)
+
+type SubTLVType byte
+
+type SubTLV struct {
+	Type  SubTLVType
+	Value []byte
+}
 
 // A Handler is an interface used by Listener to send queries.
 // The implementation of this interface may store data in the ClientData
@@ -418,7 +438,7 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		// Both server and client want to use MysqlNativePassword:
 		// the negotiation can be completed right away, using the
 		// ValidateHash() method.
-		userData, err := l.authServer.ValidateHash(salt, user, authResponse, getPlbAddr(c))
+		userData, err := l.authServer.ValidateHash(salt, user, authResponse, getPlbAddr(c), getVni(c))
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
@@ -450,7 +470,7 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		}
 		c.recycleReadPacket()
 
-		userData, err := l.authServer.ValidateHash(salt, user, response, getPlbAddr(c))
+		userData, err := l.authServer.ValidateHash(salt, user, response, getPlbAddr(c), getVni(c))
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
@@ -878,4 +898,70 @@ func getPlbAddr(c *Conn) net.Addr {
 		plbAddr = pConn.LocalAddr()
 	}
 	return plbAddr
+}
+
+func getVni(c *Conn) uint32 {
+	var vni uint32
+	tlsConn, ok := c.Conn.(*tls.Conn)
+	if ok {
+		pConn, ok := tlsConn.NetConn().(*proxyproto.Conn)
+		if ok && pConn.ProxyHeader() != nil {
+			vni, err := getVniFromTlv(pConn)
+			if err != nil {
+				return vni
+			}
+		}
+	}
+	pConn, ok := c.Conn.(*proxyproto.Conn)
+	if ok && pConn.ProxyHeader() != nil {
+		vni, err := getVniFromTlv(pConn)
+		if err != nil {
+			return vni
+		}
+	}
+	return vni
+}
+
+func getVniFromTlv(conn *proxyproto.Conn) (uint32, error) {
+	h := conn.ProxyHeader()
+	if h == nil {
+		return 0, proxyproto.ErrNoProxyProtocol
+	}
+	tlvs, err := h.TLVs()
+	if err != nil {
+		return 0, err
+	}
+	for _, tlv := range tlvs {
+		if tlv.Type == PP2_TYPE_VOLC_ENGINE {
+			raw, err := readTlvRawBySubType(tlv.Value[:], PP2_SUBTYPE_VOLC_ENGINE_VPC_ID)
+			if err != nil {
+				return 0, err
+			}
+			return binary.BigEndian.Uint32(raw), nil
+
+		}
+	}
+	return 0, ErrTLVNotFound
+}
+
+func readTlvRawBySubType(raw []byte, subType SubTLVType) ([]byte, error) {
+	var dataLen int
+	for i := 0; i < len(raw); {
+		t := SubTLVType(raw[i])
+		if t == PP2_SUBTYPE_VOLC_ENGINE_VPC_ID {
+			dataLen = 5
+		} else if t == PP2_SUBTYPE_VOLC_ENGINE_VPC_ENDPOINT_ID {
+			dataLen = 65
+		} else {
+			return nil, ErrTLVUnsupported
+		}
+		if t == subType {
+			if i+dataLen > len(raw) {
+				return nil, ErrTLVInvalid
+			}
+			return raw[i+1 : i+dataLen], nil
+		}
+		i += dataLen
+	}
+	return nil, ErrTLVUnsupported
 }
