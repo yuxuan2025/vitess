@@ -901,22 +901,23 @@ func getPlbAddr(c *Conn) net.Addr {
 }
 
 func getVni(c *Conn) uint32 {
-	var vni uint32
+	var vni uint32 = 0
+	var err error
 	tlsConn, ok := c.Conn.(*tls.Conn)
 	if ok {
 		pConn, ok := tlsConn.NetConn().(*proxyproto.Conn)
 		if ok && pConn.ProxyHeader() != nil {
-			vni, err := getVniFromTlv(pConn)
+			vni, err = getVniFromTlv(pConn)
 			if err != nil {
-				return vni
+				log.Warningf("got error when trying to parse proxy protocol tlv: %v", err)
 			}
 		}
 	}
 	pConn, ok := c.Conn.(*proxyproto.Conn)
 	if ok && pConn.ProxyHeader() != nil {
-		vni, err := getVniFromTlv(pConn)
+		vni, err = getVniFromTlv(pConn)
 		if err != nil {
-			return vni
+			log.Warningf("got error when trying to parse proxy protocol tlv: %v", err)
 		}
 	}
 	return vni
