@@ -26,6 +26,7 @@ import (
 	"time"
 
 	"github.com/pires/go-proxyproto"
+
 	"github.com/yuxuan2025/vitess/go/netutil"
 	"github.com/yuxuan2025/vitess/go/sqltypes"
 	"github.com/yuxuan2025/vitess/go/stats"
@@ -438,7 +439,11 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 		// Both server and client want to use MysqlNativePassword:
 		// the negotiation can be completed right away, using the
 		// ValidateHash() method.
-		userData, err := l.authServer.ValidateHash(salt, user, authResponse, getPlbAddr(c), getVni(c))
+		userData, err := l.authServer.ValidateHash(salt, user, authResponse, &AuthMetadata{
+			LBAddr:     getPlbAddr(c),
+			VNI:        getVni(c),
+			RemoteAddr: c.RemoteAddr(),
+		})
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)
@@ -469,8 +474,11 @@ func (l *Listener) handle(conn net.Conn, connectionID uint32, acceptTime time.Ti
 			return
 		}
 		c.recycleReadPacket()
-
-		userData, err := l.authServer.ValidateHash(salt, user, response, getPlbAddr(c), getVni(c))
+		userData, err := l.authServer.ValidateHash(salt, user, response, &AuthMetadata{
+			LBAddr:     getPlbAddr(c),
+			VNI:        getVni(c),
+			RemoteAddr: c.RemoteAddr(),
+		})
 		if err != nil {
 			log.Warningf("Error authenticating user using MySQL native password: %v", err)
 			c.writeErrorPacketFromError(err)

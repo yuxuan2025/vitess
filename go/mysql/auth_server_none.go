@@ -41,7 +41,7 @@ func (a *AuthServerNone) Salt() ([]byte, error) {
 }
 
 // ValidateHash validates hash
-func (a *AuthServerNone) ValidateHash(salt []byte, user string, authResponse []byte, remoteAddr net.Addr, vni uint32) (Getter, error) {
+func (a *AuthServerNone) ValidateHash(salt []byte, user string, authResponse []byte, metadata *AuthMetadata) (Getter, error) {
 	return &NoneGetter{}, nil
 }
 

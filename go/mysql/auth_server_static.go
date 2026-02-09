@@ -205,7 +205,7 @@ func (a *AuthServerStatic) Salt() ([]byte, error) {
 }
 
 // ValidateHash is part of the AuthServer interface.
-func (a *AuthServerStatic) ValidateHash(salt []byte, user string, authResponse []byte, remoteAddr net.Addr, vni uint32) (Getter, error) {
+func (a *AuthServerStatic) ValidateHash(salt []byte, user string, authResponse []byte, metadata *AuthMetadata) (Getter, error) {
 	a.mu.Lock()
 	entries, ok := a.entries[user]
 	a.mu.Unlock()
@@ -217,13 +217,13 @@ func (a *AuthServerStatic) ValidateHash(salt []byte, user string, authResponse [
 	for _, entry := range entries {
 		if entry.MysqlNativePassword != "" {
 			isPass := isPassScrambleMysqlNativePassword(authResponse, salt, entry.MysqlNativePassword)
-			if matchSourceHost(remoteAddr, entry.SourceHost) && isPass {
+			if matchSourceHost(metadata.LBAddr, entry.SourceHost) && isPass {
 				return &StaticUserData{entry.UserData, entry.Groups}, nil
 			}
 		} else {
 			computedAuthResponse := ScramblePassword(salt, []byte(entry.Password))
 			// Validate the password.
-			if matchSourceHost(remoteAddr, entry.SourceHost) && bytes.Equal(authResponse, computedAuthResponse) {
+			if matchSourceHost(metadata.LBAddr, entry.SourceHost) && bytes.Equal(authResponse, computedAuthResponse) {
 				return &StaticUserData{entry.UserData, entry.Groups}, nil
 			}
 		}
