@@ -56,7 +56,7 @@ func (ascc *AuthServerClientCert) Salt() ([]byte, error) {
 }
 
 // ValidateHash is unimplemented.
-func (ascc *AuthServerClientCert) ValidateHash(salt []byte, user string, authResponse []byte, remoteAddr net.Addr, vni uint32) (Getter, error) {
+func (ascc *AuthServerClientCert) ValidateHash(salt []byte, user string, authResponse []byte, metadata *AuthMetadata) (Getter, error) {
 	panic("unimplemented")
 }
 

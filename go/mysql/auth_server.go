@@ -31,6 +31,13 @@ import (
 	"github.com/yuxuan2025/vitess/go/vt/vterrors"
 )
 
+// AuthMetadata contains additional metadata about the connection used during authentication.
+type AuthMetadata struct {
+	LBAddr     net.Addr
+	VNI        uint32
+	RemoteAddr net.Addr
+}
+
 // AuthServer is the interface that servers must implement to validate
 // users and passwords. It has two modes:
 //
@@ -66,7 +73,7 @@ type AuthServer interface {
 
 	// ValidateHash validates the data sent by the client matches
 	// what the server computes.  It also returns the user data.
-	ValidateHash(salt []byte, user string, authResponse []byte, remoteAddr net.Addr, vni uint32) (Getter, error)
+	ValidateHash(salt []byte, user string, authResponse []byte, metadata *AuthMetadata) (Getter, error)
 
 	// Negotiate is called if AuthMethod returns anything else
 	// than MysqlNativePassword. It is handed the connection after the
